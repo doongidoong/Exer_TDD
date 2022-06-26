@@ -26,3 +26,26 @@ exports.getProductById = async (req,res,next)=>{
         next(error);
     }
 }
+
+exports.updateProduct = async (req,res,next)=>{
+    try{
+        const updatedProduct= await productModel.findByIdAndUpdate(req.params.productId
+            ,req.body
+            ,{new:true});//원래라면 new false이므로, 업데이트 이전 값을 리턴함. true로 변경하므로 업데이트된 이후 값 리턴
+        if(updatedProduct) res.status(200).json(updatedProduct)
+        else res.status(404).send();
+    }catch(error){
+        next(error);
+    }
+}
+
+
+exports.deleteProduct = async (req,res,next)=>{
+    try{
+        const deletedProduct= await productModel.findByIdAndDelete(req.params.productId);
+        if(deletedProduct) res.status(200).json(deletedProduct)
+        else res.status(404).send();
+    }catch(error){
+        next(error);
+    }
+}

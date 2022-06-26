@@ -4,13 +4,15 @@ const httpMocks = require('node-mocks-http');
 const newProduct = require('../data/new-product.json');
 const allProducts = require('../data/all-products.json');
 
+/* 함께 콜을 되었다는 것을 파악하려면 필수 */
 productModel.create = jest.fn()//mock 함수, 가짜 함수 spy역할을 함
 productModel.find = jest.fn();
 productModel.findById = jest.fn();
-// productModel.findByIdAndUpdate = jest.fn();
-// productModel.findByIdAndDelete = jest.fn();
+productModel.findByIdAndUpdate = jest.fn();
+productModel.findByIdAndDelete = jest.fn();
 
 const productId = '62b499e8e6e12c2cef6a0138';
+const updatedProduct = {name:'name1', description:'desc2'}
 let req, res, next;
 beforeEach(() => {
     req = httpMocks.createRequest();
@@ -108,6 +110,114 @@ describe("Product Controller GetById", () => {
         const rejectedPromise = Promise.reject(errorMessage)
         productModel.findById.mockReturnValue(rejectedPromise)
         await productController.getProductById(req, res, next);
+        expect(next).toHaveBeenCalledWith(errorMessage)
+    })
+})
+
+describe("Product Controller Update", () => {
+    it("should have a getProductById", () => {
+        expect(typeof productController.getProductById).toBe("function")
+    })
+    it("should call productMode.findById", async () => {
+        req.params.productId = productId;
+        await productController.getProductById(req, res, next);
+        expect(productModel.findById).toBeCalledWith(productId)
+    })
+    it("should return json body and reponse code 200", async () => {
+        productModel.findById.mockReturnValue(newProduct);
+        await productController.getProductById(req, res, next);
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(newProduct);
+        expect(res._isEndCalled()).toBeTruthy();
+    })
+    it("should return 404 when item doesnt exist", async () => {
+        productModel.findById.mockReturnValue(null);
+        await productController.getProductById(req, res, next);
+        expect(res.statusCode).toBe(404);//없을 때는 404 return
+        expect(res._isEndCalled()).toBeTruthy();
+    })
+    it("should handle errors", async () => {
+        const errorMessage = { message: "error" };
+        const rejectedPromise = Promise.reject(errorMessage)
+        productModel.findById.mockReturnValue(rejectedPromise)
+        await productController.getProductById(req, res, next);
+        expect(next).toHaveBeenCalledWith(errorMessage)
+    })
+})
+describe("Product Controller Update", () => {
+    it("should have an updateProduct function", () => {
+        expect(typeof productController.updateProduct).toBe("function")
+    })
+    it("should call productMode.findByIdAndUpdate", async () => {
+        req.params.productId = productId
+        req.body = updatedProduct
+        await productController.updateProduct(req, res, next);
+        expect(productModel.findByIdAndUpdate).toHaveBeenCalledWith(
+            productId, updatedProduct,
+            { new: true }
+        )//인자가 위 3가지가 들어감
+    })
+
+    it("should return json body and response code 200", async () => {
+        req.params.productId = productId
+        req.body = updatedProduct
+        productModel.findByIdAndUpdate.mockReturnValue(updatedProduct)
+        await productController.updateProduct(req, res, next)
+        expect(res._isEndCalled()).toBeTruthy();
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(updatedProduct)
+    })
+
+    it("should handle 404 when item doesnt exist", async () => {
+        productModel.findByIdAndUpdate.mockReturnValue(null);
+        await productController.updateProduct(req, res, next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    })
+
+
+    it("should handle errors", async () => {
+        const errorMessage = { message: "Error" };
+        const rejectPromise = Promise.reject(errorMessage);
+        productModel.findByIdAndUpdate.mockReturnValue(rejectPromise);
+        await productController.updateProduct(req, res, next);
+        expect(next).toHaveBeenCalledWith(errorMessage)
+    })
+
+})
+
+describe("Product Controller Delete", () => {
+    it("should have a deleteProduct function", () => {
+        expect(typeof productController.deleteProduct).toBe("function")
+    })
+    it("should call ProductModel.findByIdAndDelete", async () => {
+        req.params.productId = productId;
+        await productController.deleteProduct(req, res, next)
+        expect(productModel.findByIdAndDelete).toBeCalledWith(productId)
+    })
+    it("should return 200 response ", async () => {
+        let deletedProduct = {
+            name: "deletedProduct",
+            description: "it is deleted"
+        }
+        productModel.findByIdAndDelete.mockReturnValue(deletedProduct)
+        await productController.deleteProduct(req, res, next)
+        expect(res.statusCode).toBe(200)
+        expect(res._getJSONData()).toStrictEqual(deletedProduct)
+        expect(res._isEndCalled()).toBeTruthy();
+    })
+    it("should handle 404 when item doenst exist", async () => {
+        productModel.findByIdAndDelete.mockReturnValue(null);
+        await productController.deleteProduct(req, res, next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    })
+
+    it("should handle errors", async () => {
+        const errorMessage = { message: "Error deleting" }
+        const rejectedPromise = Promise.reject(errorMessage)
+        productModel.findByIdAndDelete.mockReturnValue(rejectedPromise)
+        await productController.deleteProduct(req, res, next)
         expect(next).toHaveBeenCalledWith(errorMessage)
     })
 })
