@@ -1,7 +1,8 @@
 const express = require('express');
 const PORT = 5000;
 const app = express();
-const productRoutes = require('./routes');
+const productRoutes = require('./routes/productRoutes');
+const testRoutes = require('./routes/testRoutes');
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://doongidoong:1234@cluster0-shard-00-00.gupvm.mongodb.net:27017,cluster0-shard-00-01.gupvm.mongodb.net:27017,cluster0-shard-00-02.gupvm.mongodb.net:27017/?ssl=true&replicaSet=atlas-132hlb-shard-0&authSource=admin&retryWrites=true&w=majority'
@@ -12,6 +13,7 @@ mongoose.connect('mongodb://doongidoong:1234@cluster0-shard-00-00.gupvm.mongodb.
 app.use(express.json());
 
 app.use("/api/products", productRoutes)
+app.use("/api/test", testRoutes)
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -27,7 +29,7 @@ app.use((error, req, res, next) => {
 */ 
 
 
-// app.listen(PORT);
-// console.log(`Running on port ${PORT}`)
+app.listen(PORT);
+console.log(`Running on port ${PORT}`)
 
 module.exports = app;

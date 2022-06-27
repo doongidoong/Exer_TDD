@@ -8,7 +8,7 @@ exports.createProduct =  async (req,res,next)=>{
     }
 }
 
-exports.getProducts = async (req,res,next)=>{
+exports.getProducts = async (req,res,next)=>{   
     try{
         const allProducts= await productModel.find({});//productModel의 {] = 모든 것을 가져옴, {}과 같이 호출됨
         res.status(200).json(allProducts);
@@ -49,3 +49,6 @@ exports.deleteProduct = async (req,res,next)=>{
         next(error);
     }
 }
+
+
+
