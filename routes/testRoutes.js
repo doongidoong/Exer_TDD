@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const testController = require("../controller/test")
+const testController = require("../controller/exer")
 
 router.get('/1',testController.findCap)
 
