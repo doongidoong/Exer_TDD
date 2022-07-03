@@ -1,10 +1,21 @@
 const mongoose = require('mongoose');
+
 const userSchema = new mongoose.Schema({
-    name: String,
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    bestFriend: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    name: {type : String },
+    email: {type: String},
+    admin : {type:String},
+    role : {type:String}
   });
 
   const User = mongoose.model('User', userSchema);
+
+
+  // generate(User, 10);
+
+// const user = User.fake();
+// console.log(user);
+
+// const users = User.fake(50);
+// console.log(users);
 
 module.exports = User;

@@ -3,15 +3,20 @@ const PORT = 5000;
 const app = express();
 const productRoutes = require('./routes/productRoutes');
 const testRoutes = require('./routes/testRoutes');
+const reviewRoutes = require('./routes/reviewRouter')
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://doongidoong:1234@cluster0-shard-00-00.gupvm.mongodb.net:27017,cluster0-shard-00-01.gupvm.mongodb.net:27017,cluster0-shard-00-02.gupvm.mongodb.net:27017/?ssl=true&replicaSet=atlas-132hlb-shard-0&authSource=admin&retryWrites=true&w=majority'
-,{useNewUrlParser:true}).then(()=>{
+
+
+mongoose.connect('mongodb://localhost:27017',{useNewUrlParser:true}).then(()=>{
     console.log('mongodb connect....')
 }).catch((e)=>console.log(e));
 
 app.use(express.json());
 
+
+
+app.use("/api/products", reviewRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/test", testRoutes)
 
