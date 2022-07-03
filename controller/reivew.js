@@ -4,6 +4,8 @@ const reviewModel = require('../models/Review');
 
 exports.search = async (req,res,next)=>{
     try {
+        const created = await reviewModel.find({})
+        console.log(`${JSON.stringify(created)}`)
     } catch (error) {
         
     }
