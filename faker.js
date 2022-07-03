@@ -6,7 +6,6 @@ const userModel = require('./models/User')
 const storeModel = require('./models/Store')
 
 const mongoose = require('mongoose');
-const { findById, findOne } = require('./models/Product');
 
 
 mongoose.connect('mongodb://localhost:27017',{useNewUrlParser:true}).then(()=>{
