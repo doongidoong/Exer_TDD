@@ -5,10 +5,11 @@ const productRoutes = require('./routes/productRoutes');
 const testRoutes = require('./routes/testRoutes');
 const reviewRoutes = require('./routes/reviewRouter')
 const mongoose = require('mongoose');
+require('dotenv').config();
+const {MONGO_URI} = process.env
 
 
-
-mongoose.connect('mongodb://localhost:27017',{useNewUrlParser:true}).then(()=>{
+mongoose.connect(MONGO_URI,{useNewUrlParser:true}).then(()=>{
     console.log('mongodb connect....')
 }).catch((e)=>console.log(e));
 
