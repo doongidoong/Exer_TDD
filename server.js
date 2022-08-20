@@ -5,6 +5,8 @@ const productRoutes = require('./routes/productRoutes');
 const testRoutes = require('./routes/testRoutes');
 const reviewRoutes = require('./routes/reviewRouter')
 const mongoose = require('mongoose');
+var cors = require('cors');
+
 require('dotenv').config();
 const {MONGO_URI} = process.env
 
@@ -12,7 +14,7 @@ const {MONGO_URI} = process.env
 mongoose.connect(MONGO_URI,{useNewUrlParser:true}).then(()=>{
     console.log('mongodb connect....')
 }).catch((e)=>console.log(e));
-
+app.use(cors());
 app.use(express.json());
 
 

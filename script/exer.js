@@ -1,8 +1,8 @@
-const productModel = require('./models/Product');
-const basicproductModel = require('./models/BasicProduct');
-const reviewModel = require('./models/Review');
-const userModel = require('./models/User')
-const storeModel = require('./models/Store')
+const productModel = require('../models/Product');
+const basicproductModel = require('../models/BasicProduct');
+const reviewModel = require('../models/Review');
+const userModel = require('../models/User')
+const storeModel = require('../models/Store')
 
 const mongoose = require('mongoose');
 
